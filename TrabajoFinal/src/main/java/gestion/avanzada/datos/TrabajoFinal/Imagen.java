@@ -13,7 +13,7 @@ import javax.swing.text.StyledEditorKit.ForegroundAction;
 
 public class Imagen {
 	
-	private String ruta = "C:\\Señales\\001.PNG";
+	private String ruta = "C:\\Señales\\002.PNG";
 	private BufferedImage img;
 	
 	//public Map<String, int[]> colores = new HashMap<String, int[]>();
@@ -24,45 +24,64 @@ public class Imagen {
 	
 	//NEGRO
 	static final int[] negroRGB = {0,0,0};
+        
 	//AZUL
 	static final int[] azulRGB = {0,0,255};
+        
 	//AZUL CLARO
-	static final int[] azulClaroRGB = {80,80,255};
+	////static final int[] azulClaroRGB = {80,80,255};
+        
 	//AZUL OSCURO
-	static final int[] azulOscuroRGB = {0,0,140};
+	////static final int[] azulOscuroRGB = {0,0,140};
+        
 	//MARRON
 	static final int[] marronRGB = {120,80,20};
+        
 	//MARRON CLARO
-	static final int[] marronClaroRGB = {190,140,70};
+	////static final int[] marronClaroRGB = {190,140,70};
+        
 	//GRIS
 	static final int[] grisRGB = {160,160,160};
+        
 	//VERDE
 	static final int[] verdeRGB = {0,255,0};
+        
 	//VERDE CLARO
-	static final int[] verdeClaroRGB = {120,255,120};
+	////static final int[] verdeClaroRGB = {120,255,120};
+        
 	//VERDE OSCURO
-	static final int[] verdeOscuroRGB = {0,120,0};
+	////static final int[] verdeOscuroRGB = {0,120,0};
+        
 	//NARANJA
 	static final int[] naranjaRGB = {255,100,0};
+        
 	//MAGENTA
 	static final int[] magentaRGB = {255,0,255};
+        
 	//PURPURA
 	static final int[] purpuraRGB = {120,0,255};
+        
 	//ROJO
 	static final int[] rojoRGB = {255,0,0};
+        
 	//ROJO CLARO
-	static final int[] rojoClaroRGB = {255,80,80};
+	////static final int[] rojoClaroRGB = {255,80,80};
+        
 	//ROJO OSCURO
-	static final int[] rojoOscuroRGB = {160,0,0};
+	////static final int[] rojoOscuroRGB = {160,0,0};
+        
 	//BLANCO
 	static final int[] blancoRGB = {255,255,255};
+        
 	//AMARILLO
 	static final int[] amarilloRGB = {255,255,0};
+        
 	//AMARILLO CLARO
-	static final int[] amarilloClaroRGB = {255,255,130};
-	//AMARILLO OSCURO
-	static final int[] amarilloOscuroRGB = {220,220,0};
-	
+	////static final int[] amarilloClaroRGB = {255,255,130};
+        
+        //AMARILLO OSCURO
+	////static final int[] amarilloOscuroRGB = {220,220,0};
+        
 	
 	public Imagen() {
 		/*
@@ -89,24 +108,15 @@ public class Imagen {
 		*/
 		this.colores.add(Imagen.negroRGB);
 		this.colores.add(Imagen.azulRGB);
-		this.colores.add(Imagen.azulClaroRGB);
-		this.colores.add(Imagen.azulOscuroRGB);
 		this.colores.add(Imagen.marronRGB);
-		this.colores.add(Imagen.marronClaroRGB);
 		this.colores.add(Imagen.grisRGB);
 		this.colores.add(Imagen.verdeRGB);
-		this.colores.add(Imagen.verdeClaroRGB);
-		this.colores.add(Imagen.verdeOscuroRGB);
 		this.colores.add(Imagen.naranjaRGB);
 		this.colores.add(Imagen.magentaRGB);
 		this.colores.add(Imagen.purpuraRGB);
 		this.colores.add(Imagen.rojoRGB);
-		this.colores.add(Imagen.rojoClaroRGB);
-		this.colores.add(Imagen.rojoOscuroRGB);
 		this.colores.add(Imagen.blancoRGB);
 		this.colores.add(Imagen.amarilloRGB);
-		this.colores.add(Imagen.amarilloClaroRGB);
-		this.colores.add(Imagen.amarilloOscuroRGB);
 	}
 	
 	
@@ -135,7 +145,7 @@ public class Imagen {
 	}
 	
 	/**
-	 * Devuelve la paleta de colores de una imagen
+	 * Devuelve la paleta de colores de una imagen recorriendo cuadrantes por filas de izq a derecha
 	 * @param pathImage
 	 * @return
 	 * @throws IOException
@@ -166,6 +176,7 @@ public class Imagen {
 				}
 				
 				this.paleta.add(this.getHistograma(ptoPartidaX, ptoPartidaX+tamanioX, ptoPartidaY, ptoPartidaY+tamanioY));
+                                System.out.println(ptoPartidaX + "," + (ptoPartidaX+tamanioX) + "," + ptoPartidaY + "," + (ptoPartidaY+tamanioY));
 				ptoPartidaX = ptoPartidaX+tamanioX;
 			}
 			ptoPartidaY = ptoPartidaY+tamanioY;
@@ -181,7 +192,7 @@ public class Imagen {
 	public int getSimilarColorPosition(int[] pixelColor) {
 		float min = this.getEuclideanDistance(pixelColor, this.colores.get(0));
 		int pos = 0;
-		for (int i=1; i<20; i++) {
+		for (int i=1; i<this.colores.size(); i++) {
 			float distance = this.getEuclideanDistance(pixelColor, this.colores.get(i));
 			if (distance < min) {
 				min = distance;
@@ -200,7 +211,7 @@ public class Imagen {
 	 * @return
 	 */
 	public int[] getHistograma(int desdeX, int hastaX, int desdeY, int hastaY) {
-		int[] histograma = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+		int[] histograma = {0,0,0,0,0,0,0,0,0,0,0};
 		for (int i = desdeX; i<hastaX; i++){
 			for (int j = desdeY; j<hastaY; j++){
 				int[] pixel = this.getRGBcomponents(new Color(this.img.getRGB(i,j)));
