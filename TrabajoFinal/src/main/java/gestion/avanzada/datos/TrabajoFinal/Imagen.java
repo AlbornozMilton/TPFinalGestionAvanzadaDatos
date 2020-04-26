@@ -15,6 +15,7 @@ public class Imagen {
 	
 	private String ruta = "C:\\Señales\\002.PNG";
 	private BufferedImage img;
+        private BufferedImage imgCopy;
 	
 	//public Map<String, int[]> colores = new HashMap<String, int[]>();
 	public ArrayList<int[]> colores = new ArrayList<int[]>();
@@ -35,13 +36,13 @@ public class Imagen {
 	////static final int[] azulOscuroRGB = {0,0,140};
         
 	//MARRON
-	static final int[] marronRGB = {120,80,20};
+	//static final int[] marronRGB = {120,80,20};
         
 	//MARRON CLARO
 	////static final int[] marronClaroRGB = {190,140,70};
         
 	//GRIS
-	static final int[] grisRGB = {160,160,160};
+	///static final int[] grisRGB = {160,160,160};
         
 	//VERDE
 	static final int[] verdeRGB = {0,255,0};
@@ -59,13 +60,13 @@ public class Imagen {
 	static final int[] magentaRGB = {255,0,255};
         
 	//PURPURA
-	static final int[] purpuraRGB = {120,0,255};
+	//static final int[] purpuraRGB = {120,0,255};
         
 	//ROJO
 	static final int[] rojoRGB = {255,0,0};
         
 	//ROJO CLARO
-	////static final int[] rojoClaroRGB = {255,80,80};
+	static final int[] rojoClaroRGB = {255,80,80};
         
 	//ROJO OSCURO
 	////static final int[] rojoOscuroRGB = {160,0,0};
@@ -108,12 +109,12 @@ public class Imagen {
 		*/
 		this.colores.add(Imagen.negroRGB);
 		this.colores.add(Imagen.azulRGB);
-		this.colores.add(Imagen.marronRGB);
-		this.colores.add(Imagen.grisRGB);
+		//this.colores.add(Imagen.marronRGB);
+		//this.colores.add(Imagen.grisRGB);
 		this.colores.add(Imagen.verdeRGB);
 		this.colores.add(Imagen.naranjaRGB);
 		this.colores.add(Imagen.magentaRGB);
-		this.colores.add(Imagen.purpuraRGB);
+		this.colores.add(Imagen.rojoClaroRGB);
 		this.colores.add(Imagen.rojoRGB);
 		this.colores.add(Imagen.blancoRGB);
 		this.colores.add(Imagen.amarilloRGB);
@@ -142,6 +143,7 @@ public class Imagen {
 	public void loadImage(String pathImage) throws IOException {
 		File folder = new File(pathImage);
 		this.img = ImageIO.read(folder);
+                this.imgCopy = this.img;
 	}
 	
 	/**
@@ -176,11 +178,12 @@ public class Imagen {
 				}
 				
 				this.paleta.add(this.getHistograma(ptoPartidaX, ptoPartidaX+tamanioX, ptoPartidaY, ptoPartidaY+tamanioY));
-                                System.out.println(ptoPartidaX + "," + (ptoPartidaX+tamanioX) + "," + ptoPartidaY + "," + (ptoPartidaY+tamanioY));
 				ptoPartidaX = ptoPartidaX+tamanioX;
 			}
 			ptoPartidaY = ptoPartidaY+tamanioY;
 		}
+                File outputfile = new File("C:\\Señales\\zout.png");
+                ImageIO.write(this.imgCopy, "png", outputfile);
 		return this.paleta;
 	}
 	
@@ -211,10 +214,11 @@ public class Imagen {
 	 * @return
 	 */
 	public int[] getHistograma(int desdeX, int hastaX, int desdeY, int hastaY) {
-		int[] histograma = {0,0,0,0,0,0,0,0,0,0,0};
+		int[] histograma = {0,0,0,0,0,0,0,0,0}; //cambiar esto, es muy hardcode
 		for (int i = desdeX; i<hastaX; i++){
 			for (int j = desdeY; j<hastaY; j++){
 				int[] pixel = this.getRGBcomponents(new Color(this.img.getRGB(i,j)));
+                                this.setColorRGB(i, j, this.colores.get(this.getSimilarColorPosition(pixel)));
 				histograma[this.getSimilarColorPosition(pixel)]++;
 			}
 		}
@@ -232,6 +236,17 @@ public class Imagen {
 		rgbColor[1] = color.getGreen();
 		rgbColor[2] = color.getBlue();
 		return rgbColor;
+	}
+        
+        /**
+	 * Inserta el color detectado de la paleta personalizada en la imagen de salida
+	 * @param colorRGB
+         * @param x
+         * @param y
+	 */
+	public void setColorRGB (int x, int y, int[] colorRGB) {
+		Color color = new Color(colorRGB[0],colorRGB[1],colorRGB[2]);
+                this.imgCopy.setRGB(x, y, color.getRGB());
 	}
 	
 	
