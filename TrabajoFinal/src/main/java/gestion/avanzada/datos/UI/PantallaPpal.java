@@ -5,13 +5,17 @@
  */
 package gestion.avanzada.datos.UI;
 
-import gestion.avanzada.datos.TrabajoFinal.Imagen2;
+import gestion.avanzada.datos.DAOs.SenialDAO;
+import gestion.avanzada.datos.Dominio.Senial;
+import gestion.avanzada.datos.TrabajoFinal.Imagen;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
 
 /**
@@ -54,6 +58,11 @@ public class PantallaPpal extends javax.swing.JFrame {
         imageBoxResult_1 = new javax.swing.JLabel();
         imageBoxResult_5 = new javax.swing.JLabel();
         imageBoxResult_4 = new javax.swing.JLabel();
+        resultado_label_1 = new javax.swing.JLabel();
+        resultado_label_2 = new javax.swing.JLabel();
+        resultado_label_3 = new javax.swing.JLabel();
+        resultado_label_4 = new javax.swing.JLabel();
+        resultado_label_5 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jPanel6 = new javax.swing.JPanel();
         buscarImagenBtn1 = new javax.swing.JButton();
@@ -93,7 +102,12 @@ public class PantallaPpal extends javax.swing.JFrame {
         buscarSenialBtn.setText("Buscar Señal");
         buscarSenialBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buscarSenialBtnActionPerformed(evt);
+                try {
+					buscarSenialBtnActionPerformed(evt);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
             }
         });
 
@@ -124,13 +138,13 @@ public class PantallaPpal extends javax.swing.JFrame {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(imagenLbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(imagenLbl, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGap(26, 26, 26)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(buscarImagenBtn)
                             .addComponent(textBoxFile, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
                         .addComponent(buscarSenialBtn)))
                 .addContainerGap())
         );
@@ -149,34 +163,68 @@ public class PantallaPpal extends javax.swing.JFrame {
 
         imageBoxResult_4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
+        resultado_label_1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        resultado_label_1.setText("<html><center>Señal 1<center><html>");
+
+        resultado_label_2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        resultado_label_2.setText("<html><center>Señal 2<center><html>");
+
+        resultado_label_3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        resultado_label_3.setText("<html><center>Señal 3<center><html>");
+
+        resultado_label_4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        resultado_label_4.setText("<html><center>Señal 4<center><html>");
+
+        resultado_label_5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        resultado_label_5.setText("<html><center>Señal 5<center><html>");
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(imageBoxResult_1, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(imageBoxResult_2, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(imageBoxResult_3, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(imageBoxResult_4, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(imageBoxResult_5, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(imageBoxResult_1, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(imageBoxResult_2, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(imageBoxResult_3, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(imageBoxResult_4, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(imageBoxResult_5, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(resultado_label_1, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(resultado_label_2, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(resultado_label_3, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(resultado_label_4, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(resultado_label_5, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(imageBoxResult_1, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(imageBoxResult_2, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(imageBoxResult_3, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(imageBoxResult_4, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(imageBoxResult_5, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(resultado_label_2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 51, Short.MAX_VALUE)
+                    .addComponent(resultado_label_1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(resultado_label_3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(resultado_label_4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(resultado_label_5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -196,8 +244,8 @@ public class PantallaPpal extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         jTabbedPane2.addTab("Consultar", jPanel2);
@@ -285,7 +333,7 @@ public class PantallaPpal extends javax.swing.JFrame {
                 .addComponent(statusProgressBarLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(110, Short.MAX_VALUE))
+                .addContainerGap(158, Short.MAX_VALUE))
         );
 
         jTabbedPane2.addTab("Cargar", jPanel1);
@@ -300,22 +348,23 @@ public class PantallaPpal extends javax.swing.JFrame {
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGap(294, 294, 294)
-                .addComponent(jLabel2)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
-                .addContainerGap(194, Short.MAX_VALUE)
-                .addComponent(jLabel1)
-                .addGap(188, 188, 188))
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGap(182, 182, 182)
+                        .addComponent(jLabel1))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGap(280, 280, 280)
+                        .addComponent(jLabel2)))
+                .addContainerGap(200, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGap(92, 92, 92)
+                .addGap(104, 104, 104)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel2)
-                .addContainerGap(197, Short.MAX_VALUE))
+                .addContainerGap(233, Short.MAX_VALUE))
         );
 
         jTabbedPane2.addTab("Acerca de", jPanel5);
@@ -328,17 +377,19 @@ public class PantallaPpal extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jTabbedPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 428, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void buscarImagenBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buscarImagenBtnActionPerformed
-         JFileChooser exploradorArch = new JFileChooser("C:\\Señales");
+        this.textBoxFile.setText("");
+        this.rSScaleLabel1.setScaleLabel(this.imagenLbl, null);
+        JFileChooser exploradorArch = new JFileChooser("C:\\Users\\Milton\\Desktop\\Imagenes para pruebas");
          exploradorArch.showOpenDialog(this);
-         String selectedFilePath = exploradorArch.getSelectedFile().getAbsolutePath();
-         if (selectedFilePath != null) {
+         if (exploradorArch.getSelectedFile().getAbsolutePath() != null){
+        	 String selectedFilePath = exploradorArch.getSelectedFile().getAbsolutePath();
              this.textBoxFile.setText(selectedFilePath);
              this.rSScaleLabel1.setScaleLabel(this.imagenLbl, selectedFilePath);
          }
@@ -384,7 +435,7 @@ public class PantallaPpal extends javax.swing.JFrame {
 	            try {
 	                int sum = 0;
 	                for (String path:selectedFilesPaths){
-	                	Imagen2 img = new Imagen2();
+	                	Imagen img = new Imagen();
 	                    img.loadImageToBD(path);
 	                    sum = sum + porcentaje;
 	                    progressBar.setValue(sum);
@@ -408,13 +459,41 @@ public class PantallaPpal extends javax.swing.JFrame {
     }
     
     private void cargarSenialesBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cargarSenialesBtnActionPerformed
-        SwingWorker progress = new ProgressBar();
+    	if (this.textBoxFile1.getText().equals("Seleccione una o mas imagenes") || this.textBoxFile1.getText().equals(" ") ) {
+    		JOptionPane.showMessageDialog(this, "Debe seleccionar una imagen o más para cargar");
+    		return;
+    	}
+    	SwingWorker progress = new ProgressBar();
         progress.execute();
     }//GEN-LAST:event_cargarSenialesBtnActionPerformed
 
-    private void buscarSenialBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buscarSenialBtnActionPerformed
-        Imagen2 img = new Imagen2();
-        img.findSimilarImagesAs("path");
+    private void initRSScalabelResultBoxes(){
+        this.rSScaleLabel1.setScaleLabel(this.imageBoxResult_1, null);
+        this.rSScaleLabel1.setScaleLabel(this.imageBoxResult_2, null);
+        this.rSScaleLabel1.setScaleLabel(this.imageBoxResult_3, null);
+        this.rSScaleLabel1.setScaleLabel(this.imageBoxResult_4, null);
+        this.rSScaleLabel1.setScaleLabel(this.imageBoxResult_5, null);
+    }    
+    
+    private void buscarSenialBtnActionPerformed(java.awt.event.ActionEvent evt) throws IOException {//GEN-FIRST:event_buscarSenialBtnActionPerformed
+    	if (this.textBoxFile.getText().equals("Seleccione una imagen") || this.textBoxFile.getText().equals("") ) {
+    		JOptionPane.showMessageDialog(this, "Debe seleccionar una imagen para realizar la búsqueda");
+    		return;
+    	}
+        this.initRSScalabelResultBoxes();
+        Imagen img = new Imagen();
+        SenialDAO senial = new SenialDAO();
+        List<Senial> seniales = (List<Senial>) img.findSimilarImagesAs(this.textBoxFile.getText());
+        this.rSScaleLabel1.setScaleLabel(this.imageBoxResult_1, seniales.get(0).getRuta());
+        this.resultado_label_1.setText("<html><center>"+seniales.get(0).getDescripcion()+"<center><html>");
+        this.rSScaleLabel1.setScaleLabel(this.imageBoxResult_2, seniales.get(1).getRuta());
+        this.resultado_label_2.setText("<html><center>"+seniales.get(1).getDescripcion()+"<center><html>");
+        this.rSScaleLabel1.setScaleLabel(this.imageBoxResult_3, seniales.get(2).getRuta());
+        this.resultado_label_3.setText("<html><center>"+seniales.get(2).getDescripcion()+"<center><html>");
+        this.rSScaleLabel1.setScaleLabel(this.imageBoxResult_4, seniales.get(3).getRuta());
+        this.resultado_label_4.setText("<html><center>"+seniales.get(3).getDescripcion()+"<center><html>");
+        this.rSScaleLabel1.setScaleLabel(this.imageBoxResult_5, seniales.get(4).getRuta());
+        this.resultado_label_5.setText("<html><center>"+seniales.get(4).getDescripcion()+"<center><html>");
     }//GEN-LAST:event_buscarSenialBtnActionPerformed
 
     /**
@@ -475,6 +554,11 @@ public class PantallaPpal extends javax.swing.JFrame {
     private javax.swing.JTabbedPane jTabbedPane2;
     private javax.swing.JProgressBar progressBar;
     private rsscalelabel.RSScaleLabel rSScaleLabel1;
+    private javax.swing.JLabel resultado_label_1;
+    private javax.swing.JLabel resultado_label_2;
+    private javax.swing.JLabel resultado_label_3;
+    private javax.swing.JLabel resultado_label_4;
+    private javax.swing.JLabel resultado_label_5;
     private javax.swing.JLabel statusProgressBarLabel;
     private javax.swing.JTextField textBoxFile;
     private javax.swing.JTextField textBoxFile1;

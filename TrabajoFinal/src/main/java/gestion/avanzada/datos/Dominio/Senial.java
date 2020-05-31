@@ -17,7 +17,7 @@ public class Senial implements Serializable {
 
 	@Id()
 	@Column(name = "id")
-        @GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
 	
 	@Column(name = "descripcion")
@@ -29,11 +29,13 @@ public class Senial implements Serializable {
 	@Column(name = "paleta")
 	private String paleta;
 	
+	@Column(name = "distancia")
+	private float distancia;
+	
 	public Senial() {
-		//algo
 	}
 
-        public Senial(String descripcion, String ruta, String paleta) {
+    public Senial(String descripcion, String ruta, String paleta) {
 		this.descripcion = descripcion;
 		this.ruta = ruta;
 		this.paleta = paleta;
@@ -69,9 +71,4 @@ public class Senial implements Serializable {
 	public void setPaleta(String paleta) {
 		this.paleta = paleta;
 	}
-	
-	
-	
-	
-
 }

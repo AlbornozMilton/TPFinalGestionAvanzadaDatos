@@ -6,19 +6,30 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-
 import javax.imageio.ImageIO;
-import javax.swing.text.StyledEditorKit.ForegroundAction;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+
+import gestion.avanzada.datos.DAOs.SenialDAO;
+import gestion.avanzada.datos.Dominio.Senial;
+import gestion.avanzada.datos.UI.PantallaPpal;
+
 
 public class Imagen {
+
+	private EntityManagerFactory emf;
+	private static EntityManager manager;
 	
-	private String ruta = "C:\\Señales\\002.PNG";
+	private final int CANTIDAD_CUADRANTES_POR_LADO = 5;
+        
 	private BufferedImage img;
-        private BufferedImage imgCopy;
-	
-	//public Map<String, int[]> colores = new HashMap<String, int[]>();
+    Map<Integer, Integer> mapColors = new HashMap<Integer, Integer>();
+    
 	public ArrayList<int[]> colores = new ArrayList<int[]>();
+	public ArrayList<int[]> coloresSeniales = new ArrayList<int[]>();
 	public ArrayList<int[]> paleta = new ArrayList<int[]>();
 	
 	//COLORES
@@ -30,37 +41,25 @@ public class Imagen {
 	static final int[] azulRGB = {0,0,255};
         
 	//AZUL CLARO
-	////static final int[] azulClaroRGB = {80,80,255};
+	static final int[] azulClaroRGB = {160,160,255};
         
 	//AZUL OSCURO
-	////static final int[] azulOscuroRGB = {0,0,140};
-        
-	//MARRON
-	//static final int[] marronRGB = {120,80,20};
-        
-	//MARRON CLARO
-	////static final int[] marronClaroRGB = {190,140,70};
-        
-	//GRIS
-	///static final int[] grisRGB = {160,160,160};
+	static final int[] azulOscuroRGB = {0,0,140};
         
 	//VERDE
 	static final int[] verdeRGB = {0,255,0};
         
 	//VERDE CLARO
-	////static final int[] verdeClaroRGB = {120,255,120};
+	static final int[] verdeClaroRGB = {120,255,120};
         
 	//VERDE OSCURO
-	////static final int[] verdeOscuroRGB = {0,120,0};
+	static final int[] verdeOscuroRGB = {0,120,0};
         
 	//NARANJA
 	static final int[] naranjaRGB = {255,100,0};
         
 	//MAGENTA
 	static final int[] magentaRGB = {255,0,255};
-        
-	//PURPURA
-	//static final int[] purpuraRGB = {120,0,255};
         
 	//ROJO
 	static final int[] rojoRGB = {255,0,0};
@@ -69,55 +68,69 @@ public class Imagen {
 	static final int[] rojoClaroRGB = {255,80,80};
         
 	//ROJO OSCURO
-	////static final int[] rojoOscuroRGB = {160,0,0};
+	static final int[] rojoOscuroRGB = {160,0,0};
         
 	//BLANCO
 	static final int[] blancoRGB = {255,255,255};
+	
+	//BLANCO MAS GRIS
+	static final int[] blancoGrisaceoRGB= {170,170,170};
         
 	//AMARILLO
 	static final int[] amarilloRGB = {255,255,0};
         
 	//AMARILLO CLARO
-	////static final int[] amarilloClaroRGB = {255,255,130};
+	static final int[] amarilloClaroRGB = {255,255,130};
         
-        //AMARILLO OSCURO
-	////static final int[] amarilloOscuroRGB = {220,220,0};
+	//AMARILLO OSCURO
+	static final int[] amarilloOscuroRGB = {150,150,0};
         
 	
 	public Imagen() {
-		/*
-		this.colores.put("negroRGB", Imagen.negroRGB);
-		this.colores.put("azulRGB", Imagen.azulRGB);
-		this.colores.put("azulClaroRGB", Imagen.azulClaroRGB);
-		this.colores.put("azulOscuroRGB", Imagen.azulOscuroRGB);
-		this.colores.put("marronRGB", Imagen.marronRGB);
-		this.colores.put("marronClaroRGB", Imagen.marronClaroRGB);
-		this.colores.put("grisRGB", Imagen.grisRGB);
-		this.colores.put("verdeRGB", Imagen.verdeRGB);
-		this.colores.put("verdeClaroRGB", Imagen.verdeClaroRGB);
-		this.colores.put("verdeOscuroRGB", Imagen.verdeOscuroRGB);
-		this.colores.put("naranjaRGB", Imagen.naranjaRGB);
-		this.colores.put("magentaRGB", Imagen.magentaRGB);
-		this.colores.put("purpuraRGB", Imagen.purpuraRGB);
-		this.colores.put("rojoRGB", Imagen.rojoRGB);
-		this.colores.put("rojoClaroRGB", Imagen.rojoClaroRGB);
-		this.colores.put("rojoOscuroRGB", Imagen.rojoOscuroRGB);
-		this.colores.put("blancoRGB", Imagen.blancoRGB);
-		this.colores.put("amarilloRGB", Imagen.amarilloRGB);
-		this.colores.put("amarilloClaroRGB", Imagen.amarilloClaroRGB);
-		this.colores.put("amarilloOscuroRGB", Imagen.amarilloOscuroRGB);
-		*/
-		this.colores.add(Imagen.negroRGB);
-		this.colores.add(Imagen.azulRGB);
-		//this.colores.add(Imagen.marronRGB);
-		//this.colores.add(Imagen.grisRGB);
-		this.colores.add(Imagen.verdeRGB);
-		this.colores.add(Imagen.naranjaRGB);
-		this.colores.add(Imagen.magentaRGB);
-		this.colores.add(Imagen.rojoClaroRGB);
-		this.colores.add(Imagen.rojoRGB);
-		this.colores.add(Imagen.blancoRGB);
-		this.colores.add(Imagen.amarilloRGB);
+            //Diccionario de correspondencia de colores
+            this.colores.add(Imagen.negroRGB);
+            mapColors.put(0,4);
+            this.colores.add(Imagen.azulRGB);
+            mapColors.put(1,2);
+            this.colores.add(Imagen.azulClaroRGB);
+            mapColors.put(2,5);
+            this.colores.add(Imagen.azulOscuroRGB);
+            mapColors.put(3,2);
+            this.colores.add(Imagen.verdeRGB);
+            mapColors.put(4,5);
+            this.colores.add(Imagen.verdeOscuroRGB);
+            mapColors.put(5,5);
+            this.colores.add(Imagen.verdeClaroRGB);
+            mapColors.put(6,5);
+            this.colores.add(Imagen.naranjaRGB);
+            mapColors.put(7,6);
+            this.colores.add(Imagen.rojoRGB);
+            mapColors.put(8,1);
+            this.colores.add(Imagen.rojoClaroRGB);
+            mapColors.put(9,1);
+            this.colores.add(Imagen.rojoOscuroRGB);
+            mapColors.put(10,1);
+            this.colores.add(Imagen.blancoRGB);
+            mapColors.put(11,5);
+            this.colores.add(Imagen.amarilloRGB);
+            mapColors.put(12,0);
+            this.colores.add(Imagen.amarilloOscuroRGB);
+            mapColors.put(13,0);
+            this.colores.add(Imagen.amarilloClaroRGB);
+            mapColors.put(14,0);
+            this.colores.add(Imagen.blancoGrisaceoRGB);
+            mapColors.put(15,5);
+            this.colores.add(Imagen.magentaRGB);
+
+
+            //Inicializacion de vector de colores de señales
+            this.coloresSeniales.add(Imagen.amarilloRGB);//0
+            this.coloresSeniales.add(Imagen.rojoRGB);//    1
+            this.coloresSeniales.add(Imagen.azulRGB);//    2
+            this.coloresSeniales.add(Imagen.verdeRGB);//   3
+            this.coloresSeniales.add(Imagen.negroRGB);//   4
+            this.coloresSeniales.add(Imagen.blancoRGB);//  5
+            this.coloresSeniales.add(Imagen.naranjaRGB);// 6               
 	}
 	
 	
@@ -143,7 +156,52 @@ public class Imagen {
 	public void loadImage(String pathImage) throws IOException {
 		File folder = new File(pathImage);
 		this.img = ImageIO.read(folder);
-                this.imgCopy = this.img;
+	}
+	
+	
+    /**
+	 * Convierte la paleta de colores obtenida de procesar la imagen en la cadena de salida para la base de datos 
+	 * @param paleta
+	 * @return String
+	 */
+	public String convertToString(ArrayList<int[]> paleta) {
+		String paletaFinal = "";
+            for (int[] cuad : paleta) {
+				for (int num : cuad) {
+					paletaFinal = paletaFinal + num + ",";
+				}
+			}
+        return paletaFinal.substring(0, paletaFinal.length() - 1);
+	}
+	
+	
+        /**
+	 * Carga una imagen indicada en la ruta
+	 * @param pathImage
+	 * @throws IOException
+	 */
+	public void loadImageToBD(String path) throws IOException, InterruptedException {
+            ArrayList<int[]> paletaImagen = this.getPaletaColores(path);
+            String paletaString = convertToString(paletaImagen);
+            Senial senial = new Senial(this.getNameOfFile(path),path,paletaString); //cambiar aquu capara obtener la descripcion del nombre del archivo.
+            SenialDAO senialDAO = new SenialDAO();
+            senialDAO.saveSenial(senial);
+	}
+	
+	public String getNameOfFile(String path) {  
+		 return path.substring(path.lastIndexOf("\\")+1).split("\\.")[0];
+	}
+	
+	
+	/**
+	 * Invoca el Store Procedure para la búsqueda de resultados similiares
+	 * @param path
+	 * @throws IOException 
+	 */
+	public List<Senial> findSimilarImagesAs(String path) throws IOException{
+		SenialDAO senialDAO = new SenialDAO();
+		ArrayList<int[]> paleta = this.getPaletaColores(path);
+		return senialDAO.getSimilarImages(this.convertToString(paleta));
 	}
 	
 	/**
@@ -156,34 +214,31 @@ public class Imagen {
 		this.loadImage(pathImage);
 		int width = this.img.getWidth();
 		int height = this.img.getHeight();
-		int tamIntX = width/4;
-		int tamIntY = height/4;
-		int restoX = width - (tamIntX*4);
-		int restoY = height - (tamIntY*4);
+		int tamIntX = width/CANTIDAD_CUADRANTES_POR_LADO;
+		int tamIntY = height/CANTIDAD_CUADRANTES_POR_LADO;
+		int restoX = width - (tamIntX * CANTIDAD_CUADRANTES_POR_LADO);
+		int restoY = height - (tamIntY*CANTIDAD_CUADRANTES_POR_LADO);
 		int ptoPartidaX = 0;
 		int ptoPartidaY = 0;
-		for (int i = 0; i < 4; i++) {
+		for (int i = 0; i < CANTIDAD_CUADRANTES_POR_LADO; i++) {
 			int tamanioY = tamIntY;
 			if (restoY > 0) {
 				tamanioY++;
 				restoY--;
 			}
-			restoX = width - (tamIntX*4);
+			restoX = width - (tamIntX*CANTIDAD_CUADRANTES_POR_LADO);
 			ptoPartidaX = 0;
-			for (int j = 0; j<4; j++) {
+			for (int j = 0; j<CANTIDAD_CUADRANTES_POR_LADO; j++) {
 				int tamanioX = tamIntX;
 				if (restoX > 0) {
 					tamanioX++;
 					restoX--;
 				}
-				
 				this.paleta.add(this.getHistograma(ptoPartidaX, ptoPartidaX+tamanioX, ptoPartidaY, ptoPartidaY+tamanioY));
 				ptoPartidaX = ptoPartidaX+tamanioX;
 			}
 			ptoPartidaY = ptoPartidaY+tamanioY;
 		}
-                File outputfile = new File("C:\\Señales\\zout.png");
-                ImageIO.write(this.imgCopy, "png", outputfile);
 		return this.paleta;
 	}
 	
@@ -202,7 +257,7 @@ public class Imagen {
 				pos = i;
 			}
 		}
-		return pos;
+		return this.mapColors.get(pos);
 	}
 	
 	/**
@@ -214,11 +269,10 @@ public class Imagen {
 	 * @return
 	 */
 	public int[] getHistograma(int desdeX, int hastaX, int desdeY, int hastaY) {
-		int[] histograma = {0,0,0,0,0,0,0,0,0}; //cambiar esto, es muy hardcode
+		int[] histograma = {0,0,0,0,0,0,0}; //cambiar esto, es muy hardcode
 		for (int i = desdeX; i<hastaX; i++){
 			for (int j = desdeY; j<hastaY; j++){
-				int[] pixel = this.getRGBcomponents(new Color(this.img.getRGB(i,j)));
-                                this.setColorRGB(i, j, this.colores.get(this.getSimilarColorPosition(pixel)));
+				int[] pixel = this.getRGBcomponents(new Color(this.img.getRGB(i,j)));                                
 				histograma[this.getSimilarColorPosition(pixel)]++;
 			}
 		}
@@ -236,18 +290,5 @@ public class Imagen {
 		rgbColor[1] = color.getGreen();
 		rgbColor[2] = color.getBlue();
 		return rgbColor;
-	}
-        
-        /**
-	 * Inserta el color detectado de la paleta personalizada en la imagen de salida
-	 * @param colorRGB
-         * @param x
-         * @param y
-	 */
-	public void setColorRGB (int x, int y, int[] colorRGB) {
-		Color color = new Color(colorRGB[0],colorRGB[1],colorRGB[2]);
-                this.imgCopy.setRGB(x, y, color.getRGB());
-	}
-	
-	
+	}	
 }

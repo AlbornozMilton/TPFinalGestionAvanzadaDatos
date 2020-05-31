@@ -16,23 +16,23 @@ public class SenialDAO {
 			em.getTransaction().begin();
 			em.persist(aSenial);
 			em.getTransaction().commit();
-			System.out.println("Se guardó con exito la nueva señal");
 		} catch (Exception e) {
 			System.out.println("Ocurrió un error al intentar guardar una nueva señal");
 		}
 	}
 	
-	public ArrayList<String> getSimilarImages(String paleta){
+	public List<Senial> getSimilarImages(String paleta){
+		List<Senial> seniales = new ArrayList<Senial>();
 		try {
 			EntityManager em = App.startConnection();
 			em.getTransaction().begin();
-			List<Object> seniales = (List<Object>) em.createNativeQuery("Select * from seniales LIMIT 5").getResultList();
+			String query = "select * from seniales('" + paleta + "')";
+			seniales = (List<Senial>) em.createNativeQuery(query,Senial.class).getResultList();
 			em.getTransaction().commit();
-	    	System.out.println(seniales.size());
 	    	
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-		return new ArrayList<String>();
+		return seniales;
 	}
 }
